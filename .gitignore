@@ -160,5 +160,5 @@ cython_debug/
 #.idea/
 
 # Project Specific Ignores
-data/
+Data/Smogon_Stats/*
 debugging_notebooks/
