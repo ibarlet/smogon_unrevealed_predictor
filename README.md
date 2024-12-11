@@ -1,2 +1,2 @@
-# smogon_unrevealed_guesser
- Estimate the most likely unrevealed pokemon for a given smogon format
+# Smogon Unrevealed Predictor
+Those code estimates the most likely unrevealed pokemon for a given Smogon singles format in non-team-preview generations.

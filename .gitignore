@@ -163,3 +163,5 @@ cython_debug/
 Data/Smogon_Stats/chaos/*
 Data/Smogon_Stats/leads/*
 debugging_notebooks/
+*.pkl.gz
+*.config
