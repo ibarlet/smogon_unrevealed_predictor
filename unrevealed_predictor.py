@@ -471,30 +471,34 @@ class MainWindow(QMainWindow):
             self.most_disproportionate.setText("No Hidden Pokemon")
             return
 
-        display_likelihood, disproportionality = calculate_likelihoods(
-            self.teammates,
-            self.counts,
-            self.checks,
-            self.raw_rates,
-            self.opposing_pokemon,
-            self.your_checked_pokemon,
-        )
-
-        # Update the text boxes with the results
-        self.most_likely.setText(
-            (display_likelihood.sort_values(ascending=False).iloc[:10] * 100)
-            .round(3)
-            .to_string()
-            .replace("\n", " %\n")
-            + " %"
-        )
-        self.most_disproportionate.setText(
-            (disproportionality.sort_values(ascending=False).iloc[:10] * 100)
-            .round(3)
-            .to_string()
-            .replace("\n", " %\n")
-            + " %"
-        )
+        try:
+            display_likelihood, disproportionality = calculate_likelihoods(
+                self.teammates,
+                self.counts,
+                self.checks,
+                self.raw_rates,
+                self.opposing_pokemon,
+                self.your_checked_pokemon,
+            )
+        except KeyError:
+            self.most_likely.setText("Invalid Pokemon Present")
+            self.most_disproportionate.setText("Invalid Pokemon Present")
+        else:
+            # Update the text boxes with the results
+            self.most_likely.setText(
+                (display_likelihood.sort_values(ascending=False).iloc[:10] * 100)
+                .round(3)
+                .to_string()
+                .replace("\n", " %\n")
+                + " %"
+            )
+            self.most_disproportionate.setText(
+                (disproportionality.sort_values(ascending=False).iloc[:10] * 100)
+                .round(3)
+                .to_string()
+                .replace("\n", " %\n")
+                + " %"
+            )
 
         return
 

@@ -16,7 +16,7 @@ def calculate_likelihoods(
     if len(your_checked_pokemon) > 0:
         checked_likelihood = lead_adjusted_likelihood.copy()
         for mon in your_checked_pokemon:
-            # Eliminate any opposint pokemon that your pokmeon hasn't seen 20+ times
+            # Eliminate any opposing pokemon that your pokmeon hasn't seen 20+ times
             valid_checks = checks_df[mon].index.intersection(opposing_pokemon)
             if len(valid_checks) == 0:
                 continue
