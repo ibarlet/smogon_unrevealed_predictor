@@ -1,5 +1,6 @@
 import os
 import sys
+from urllib.error import URLError
 
 import pandas as pd
 from PyQt6.QtCore import Qt
@@ -24,9 +25,16 @@ from calculations.likelihood_calculations import calculate_likelihoods
 from data import dataframe_builder as dfb
 from data import stats_puller
 
-DEFAULT_IMAGE = "data/Sprites/201-question.png"
+
+def resource_path(relative_path):
+    """Get the absolute path to the resource, works for dev and for PyInstaller"""
+    base_path = getattr(sys, "_MEIPASS", os.path.dirname(os.path.abspath(__file__)))
+    return os.path.join(base_path, relative_path)
+
+
+DEFAULT_IMAGE = resource_path("data/Sprites/201-question.png")
 TEAM_SIZE = 6
-NUMBER_REFERENCE = pd.read_csv("data/pokemon.csv", index_col=1)
+NUMBER_REFERENCE = pd.read_csv(resource_path("data/pokemon.csv"), index_col=1)
 
 
 class FormatSelectionDialog(QDialog):
@@ -89,9 +97,12 @@ class MainWindow(QMainWindow):
 
         self.setWindowTitle("Unrevealed Predictor")
 
+        formats_pickle_file = resource_path(
+            "data/Smogon_Stats/available_formats.pkl.gz"
+        )
         try:
             self.format_options_df = pd.read_pickle(
-                "data/Smogon_Stats/available_formats.pkl.gz"
+                formats_pickle_file, compression="gzip"
             )
         except FileNotFoundError:
             self.format_options_df = None
@@ -294,7 +305,15 @@ class MainWindow(QMainWindow):
 
     # Helper functions related to format selection
     def check_for_new_formats(self):
-        stats_page = stats_puller.read_stats_page()
+        try:
+            stats_page = stats_puller.read_stats_page()
+        except URLError:
+            QMessageBox.critical(
+                self,
+                "Critical",
+                "Unable to connect to Smogon stats, check your internet connection.",
+            )
+            self.close()
         self.format_options_df, new_month_count = (
             stats_puller.determine_available_formats(
                 stats_page, chaos_options=self.format_options_df, save_to_pickle=True
@@ -315,8 +334,9 @@ class MainWindow(QMainWindow):
         if self.format_options_df is None:
             self.check_for_new_formats()
 
-        if check_default and os.path.exists("data/default_format.config"):
-            with open("data/default_format.config", "r") as f:
+        default_config_file = resource_path("data/default_format.config")
+        if check_default and os.path.exists(default_config_file):
+            with open(default_config_file, "r") as f:
                 generation, tier, elo_floor = f.read().split(",")
 
             generation = int(generation)
@@ -397,11 +417,11 @@ class MainWindow(QMainWindow):
             pokemon_number = NUMBER_REFERENCE.loc[check_text].id
             if whose == "your":
                 self.your_pokemon_images[index].setPixmap(
-                    QPixmap(f"data/Sprites/{pokemon_number}.png")
+                    QPixmap(resource_path(f"data/Sprites/{pokemon_number}.png"))
                 )
             else:
                 self.opposing_pokemon_images[index].setPixmap(
-                    QPixmap(f"data/Sprites/{pokemon_number}.png")
+                    QPixmap(resource_path(f"data/Sprites/{pokemon_number}.png"))
                 )
 
     def complete_pokemon_entry(self, entry):
@@ -454,12 +474,14 @@ class MainWindow(QMainWindow):
         except ValueError as e:
             QMessageBox.critical(self, "Critical", e.args[0])
             return
-        with open("data/default_format.config", "w") as f:
+        default_format_file = resource_path("data/default_format.config")
+        with open(default_format_file, "w") as f:
             f.write(f"{generation},{tier},{elo_floor}")
 
     def delete_default_format(self):
-        if os.path.exists("data/default_format.config"):
-            os.remove("data/default_format.config")
+        default_format_file = resource_path("data/default_format.config")
+        if os.path.exists(default_format_file):
+            os.remove(default_format_file)
 
     # Helper functions related to calculations
     def update_most_likely(self):

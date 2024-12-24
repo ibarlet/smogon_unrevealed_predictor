@@ -1,14 +1,26 @@
 # Functions to build the dataframes from the raw text files
 import gzip
 import json
+import os
+import sys
 from typing import Optional
 
 import pandas as pd
 
 
-def read_leads_file(format: str, prefix: str = "") -> pd.DataFrame:
+def resource_path(relative_path):
+    """
+    Get the absolute path to the resource, works for dev and for PyInstaller
+    Because this file is within data/ you can ignore the data/ in these resource paths
+    """
+    base_path = getattr(sys, "_MEIPASS", os.path.dirname(os.path.abspath(__file__)))
+    return os.path.join(base_path, relative_path)
+
+
+def read_leads_file(format: str) -> pd.DataFrame:
+    lead_file_path = resource_path(f"Smogon_Stats/leads/{format}.txt.gz")
     leads = pd.read_csv(
-        f"{prefix}data/Smogon_Stats/leads/{format}.txt.gz",
+        lead_file_path,
         header=2,
         delimiter="|",
     )
@@ -21,8 +33,9 @@ def read_leads_file(format: str, prefix: str = "") -> pd.DataFrame:
     return leads
 
 
-def read_chaos_file(format: str, prefix: str = "") -> dict:
-    with gzip.open(f"{prefix}data/Smogon_Stats/chaos/{format}.json.gz", mode="r") as f:
+def read_chaos_file(format: str) -> dict:
+    chaos_file_path = resource_path(f"Smogon_Stats/chaos/{format}.json.gz")
+    with gzip.open(chaos_file_path, mode="r") as f:
         data = json.loads(f.read().decode("utf-8"))
     return data
 

@@ -1,5 +1,7 @@
 # A series of functions to pull the needed files from the smogon stats repo automatically
 # These will be pulled when the GUI calls a refresh task
+# Apparently Windows Defender hats multi-line strings, so docstrings are as comments
+
 import os
 import re
 from typing import Optional
@@ -14,7 +16,7 @@ def read_stats_page():
     """
     Parses the smogon stats page to see all available subfolders
     Performance depends on the structure of the stats page and may need to be updated if that page is reformatted
-    :return: DataFrame with columns "Link" and "Upload Date"
+    :return: DataFrame with columns "Link" and "Upload Date
     """
     stats_page = pd.read_fwf(BASE_PATH, skiprows=3)
     stats_page.columns = [
@@ -116,6 +118,7 @@ def download_files(options: pd.DataFrame, generation, tier, elo_floor):
     :param options: DataFrame with columns "Link", "Upload Date", "Size", "Date Link", "Generation", "ELO Floor", "Tier"
     :param formats: List of tuples with the format (Generation, Tier, ELO Floor)
     """
+
     options_subset = options[
         (options["Generation"] == generation)
         & (options["Tier"] == tier)
@@ -126,9 +129,7 @@ def download_files(options: pd.DataFrame, generation, tier, elo_floor):
 
 
 def download_chaos(date_link: str, link: str):
-    """
-    Download the chaos.json.gz file for a given month/format
-    """
+    """Download the chaos.json.gz file for a given month/format"""
     url = BASE_PATH + date_link + "chaos/" + link
     local_filename = os.path.join("data", "Smogon_Stats", "chaos", link)
     os.makedirs(os.path.dirname(local_filename), exist_ok=True)
@@ -138,9 +139,7 @@ def download_chaos(date_link: str, link: str):
 
 
 def download_leads(date_link: str, link: str):
-    """
-    Download the leads.txt.gz file for a given month/format
-    """
+    """Download the leads.txt.gz file for a given month/format"""
     url = BASE_PATH + date_link + "leads/" + link.replace("json", "txt")
     local_filename = os.path.join(
         "data",
@@ -155,9 +154,7 @@ def download_leads(date_link: str, link: str):
 
 
 def clear_downloaded_files(folders=["chaos", "leads"]):
-    """
-    Clear all downloaded files
-    """
+    """Clear all downloaded files"""
     for folder in folders:
         for file in os.listdir(os.path.join("data", "Smogon_Stats", folder)):
             os.remove(os.path.join("data", "Smogon_Stats", folder, file))

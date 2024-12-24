@@ -160,8 +160,8 @@ cython_debug/
 #.idea/
 
 # Project Specific Ignores
-Data/Smogon_Stats/chaos/*
-Data/Smogon_Stats/leads/*
+data/Smogon_Stats/chaos/*
+data/Smogon_Stats/leads/*
 debugging_notebooks/
 *.pkl.gz
 *.config
