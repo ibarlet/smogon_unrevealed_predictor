@@ -159,5 +159,8 @@ def download_leads(date_link: str, link: str):
 def clear_downloaded_files(folders=["chaos", "leads"]):
     """Clear all downloaded files"""
     for folder in folders:
-        for file in os.listdir(os.path.join("data", "Smogon_Stats", folder)):
-            os.remove(os.path.join("data", "Smogon_Stats", folder, file))
+        try:
+            for file in os.listdir(os.path.join("data", "Smogon_Stats", folder)):
+                os.remove(os.path.join("data", "Smogon_Stats", folder, file))
+        except FileNotFoundError:
+            pass
