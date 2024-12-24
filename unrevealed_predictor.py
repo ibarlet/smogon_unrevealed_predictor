@@ -21,9 +21,9 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
+import dataframe_builder as dfb
+import stats_puller
 from calculations.likelihood_calculations import calculate_likelihoods
-from data import dataframe_builder as dfb
-from data import stats_puller
 
 
 def resource_path(relative_path):
@@ -301,7 +301,7 @@ class MainWindow(QMainWindow):
                 "Critical",
                 e.args[0],
             )
-            self.select_format()
+            self.select_format(check_default=False)
 
     # Helper functions related to format selection
     def check_for_new_formats(self):
@@ -339,12 +339,19 @@ class MainWindow(QMainWindow):
             with open(default_config_file, "r") as f:
                 generation, tier, elo_floor = f.read().split(",")
 
-            generation = int(generation)
-            self.reset()
-            self.counts, self.raw_rates, self.teammates, self.checks = self.load_data(
-                generation=generation, tier=tier, elo_cutoff=elo_floor
-            )
-            return generation, tier, elo_floor
+            try:
+                generation = int(generation)
+            except ValueError:
+                # If the default format is invalid, delete it and pretend it doesn't exist
+                self.delete_default_format()
+            else:
+                self.reset()
+                self.counts, self.raw_rates, self.teammates, self.checks = (
+                    self.load_data(
+                        generation=generation, tier=tier, elo_cutoff=elo_floor
+                    )
+                )
+                return generation, tier, elo_floor
 
         # Popup the dialog box to select the format
         format_dialog = FormatSelectionDialog(self.format_options_df, self)

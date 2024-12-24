@@ -3,7 +3,6 @@ import gzip
 import json
 import os
 import sys
-from typing import Optional
 
 import pandas as pd
 
@@ -18,7 +17,7 @@ def resource_path(relative_path):
 
 
 def read_leads_file(format: str) -> pd.DataFrame:
-    lead_file_path = resource_path(f"Smogon_Stats/leads/{format}.txt.gz")
+    lead_file_path = resource_path(f"data/Smogon_Stats/leads/{format}.txt.gz")
     leads = pd.read_csv(
         lead_file_path,
         header=2,
@@ -34,7 +33,7 @@ def read_leads_file(format: str) -> pd.DataFrame:
 
 
 def read_chaos_file(format: str) -> dict:
-    chaos_file_path = resource_path(f"Smogon_Stats/chaos/{format}.json.gz")
+    chaos_file_path = resource_path(f"data/Smogon_Stats/chaos/{format}.json.gz")
     with gzip.open(chaos_file_path, mode="r") as f:
         data = json.loads(f.read().decode("utf-8"))
     return data

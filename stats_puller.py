@@ -115,7 +115,9 @@ def determine_available_formats(
     )
 
     if save_to_pickle:
-        chaos_options.to_pickle(resource_path("Smogon_Stats/available_formats.pkl.gz"))
+        chaos_options.to_pickle(
+            resource_path("data/Smogon_Stats/available_formats.pkl.gz")
+        )
 
     return chaos_options, more_recent_months
 
@@ -139,7 +141,7 @@ def download_files(options: pd.DataFrame, generation, tier, elo_floor):
 def download_chaos(date_link: str, link: str):
     """Download the chaos.json.gz file for a given month/format"""
     url = BASE_PATH + date_link + "chaos/" + link
-    local_filename = resource_path(f"Smogon_Stats/chaos/{link}")
+    local_filename = resource_path(f"data/Smogon_Stats/chaos/{link}")
     os.makedirs(os.path.dirname(local_filename), exist_ok=True)
     response = requests.get(url)
     with open(local_filename, "wb") as f:
@@ -149,7 +151,9 @@ def download_chaos(date_link: str, link: str):
 def download_leads(date_link: str, link: str):
     """Download the leads.txt.gz file for a given month/format"""
     url = BASE_PATH + date_link + "leads/" + link.replace("json", "txt")
-    local_filename = resource_path(f"Smogon_Stats/leads/{link.replace("json", "txt")}")
+    local_filename = resource_path(
+        f"data/Smogon_Stats/leads/{link.replace("json", "txt")}"
+    )
     os.makedirs(os.path.dirname(local_filename), exist_ok=True)
     response = requests.get(url)
     with open(local_filename, "wb") as f:
@@ -160,7 +164,7 @@ def clear_downloaded_files(folders=["chaos", "leads"]):
     """Clear all downloaded files"""
     for folder in folders:
         try:
-            for file in os.listdir(os.path.join("data", "Smogon_Stats", folder)):
-                os.remove(os.path.join("data", "Smogon_Stats", folder, file))
+            for file in os.listdir(resource_path(f"data/Smogon_Stats/{folder}")):
+                os.remove(resource_path(f"data/Smogon_Stats/{folder}/{file}"))
         except FileNotFoundError:
             pass
