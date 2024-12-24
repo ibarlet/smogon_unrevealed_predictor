@@ -165,3 +165,5 @@ data/Smogon_Stats/leads/*
 debugging_notebooks/
 *.pkl.gz
 *.config
+dist/
+build/
