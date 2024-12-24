@@ -13,7 +13,15 @@
 The goal of this code is to develop a system for predicting unrevealed pokemon on the opponent’s side in non team preview Smogon singles formats. The system also handles automatically gathering the relevant data and storing it locally.
 
 ## Installation
-Currently the source code must be downloaded and run via the command line. I hope to make an executable version soon for less tech savvy people but don't have  experience with that process. There are 3 Python libraries required (listed in the requirements.txt file). This code was developed on (and so far has only been tested with) Python 3.12 on a Windows device.
+### Windows Executable Installation
+The unrevealed_predictor.zip file contains a Windows .exe file (and also a data folder). You should be able to unzip that folder on any 64-bit Windows computer and run the code by double clicking on unrevealed_predictor.exe.
+
+It's my understanding that Windows Defender will often block .exe files created with pyinstaller because some people create viruses using that package and so all executables produced this way have elements that look like known viruses. Scouts honor that I didn't design this to do anything malicious (and am only using well established libraries which also shouldn't do anything malicous). 
+
+Due to the limitations of the pyinstaller package (and the fact that I only have one computer) I cannot create executable files for other operating systems.
+
+### Open Source Installation
+This source code can be downloaded and run via the command line. There are 3 Python libraries required (listed in the requirements.txt file). This code was developed on (and so far has only been tested with) Python 3.12 on a Windows device.
 
 ## Usage
 Upon first running the program you will be prompted to input your selected format. Once you have done that you will be brought into the main working area (shown below). 
