@@ -79,7 +79,7 @@ Technically, the divisor above is not actually 2 but actually (2-P(A|B)-P(B|A)) 
 All non-team preview generations have a fixed lead for each team. There are some pokemon who are disproportionately seen in the lead pokemon slot. If pokemon A is seen in the lead slot 60% of the time and pokemon B is teammates with A 30% of the time, we make the assumption that that 30% is independent of A's lead status. Therefore, while P(A|B) = 0.3, P(A|B & A_not_lead) which is what we use is equal to 0.3 * (1-0.6) or 0.12.
 
 ### Checks and Counters Adjustment
-The checks and counters adjustment relies on the idea that in most cases your opponent will attempt to check your pokemon with the most effective check/counter they have on their team. Therefore, any pokemon who would be a better counter to yours are unlikely to remain hidden on the opponents team. In the data, each pokemon has a pairwise check/counter score functionally a proportion of the time pokemon A is KO'ed or forced to switch out by pokemon B. The formula for this section looks something like P(C|B & A_checked) = P(C|B) * 1-min(0, C_checks_A - B_checks_A)
+The checks and counters adjustment relies on the idea that in most cases your opponent will attempt to check your pokemon with the most effective check/counter they have on their team. Therefore, any pokemon who would be a better counter to yours are unlikely to remain hidden on the opponents team. In the data, each pokemon has a pairwise check/counter score functionally a proportion of the time pokemon A is KO'ed or forced to switch out by pokemon B. The formula for this section looks something like P(C|B & A_checked) = P(C|B) * 1-min(0, C_checks_A - B_checks_A).
 
 For example the check/counter data for Zapdos in Gen3 OU could look in part like
 
@@ -111,10 +111,10 @@ Overall I don't expect this tool to be a replacement for game knowledge. I hope 
 #### Versatile Pokemon 
 Many pokemon have versatile roles they can play which impact their likely teammates. For example, in Gen3 OU Forretress really appreciates having Tyranitar with Pursuit as a teammate. Therefore, seeing a non-pursuit Tyranitar likely indicates there is not a Forretress, and if you see both non-pursuit Tyranitar and Forretress an alternate pursuit user like Umbreon or Houndoom is incredibly likely. This system does not understand that context and treats all Tyranitars the same regardless of moveset.
 
-Versatile pokemon on your side of the field may also affect the checks and counters adjustment. Consider a pokemon choice locked into a given move. Depending on the move selected, the best check on the opponent's side may be a pokemon who isn't typically considered a check to yours. Marking the "Checked/Countered" box will then 
+Versatile pokemon on your side of the field may also affect the checks and counters adjustment. Consider a pokemon choice locked into a given move. Depending on the move selected, the best check on the opponent's side may be a pokemon who isn't typically considered a check to yours. Marking the "Checked/Countered" box will then erroneously suggest that more typical checks are unlikely to be seen.
 
 #### Pokemon with Niche Roles
-Due to the pairwise nature of the correlations, this code cannot consider holes in the opponent's overall team and is unlikely to suggest niche pokemon that could effectively fill that hole.
+Due to the pairwise nature of the correlations, this code cannot consider holes in the opponent's team as currently revealed and is unlikely to suggest niche pokemon that could effectively fill that hole.
 
 #### Positioning
 Aside from the lead position, this code cannot account for reveal order. Certain pokemon mostly fill the role of late-game sweeper and so are likely to be hidden until the end game if at all possible.
